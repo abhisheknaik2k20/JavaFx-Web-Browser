@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" style="-fx-background-color: #05BBB9;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WeatherApplication">
+   <children>
+      <ImageView fx:id="tempR" fitHeight="400.0" fitWidth="600.0" layoutX="1.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/pexels-francesco-ungaro-281260.jpg" />
+         </image>
+         <viewport>
+            <Rectangle2D />
+         </viewport>
+      </ImageView>
+      <TextField fx:id="wtext" layoutX="17.0" layoutY="110.0" prefHeight="28.0" prefWidth="321.0" promptText="Enter Place (Preferably a City)" style="-fx-background-radius: 100;" />
+      <Label layoutX="67.0" layoutY="54.0">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <Button layoutX="206.0" layoutY="146.0" mnemonicParsing="false" onAction="#startmethod" prefHeight="26.0" prefWidth="115.0" style="-fx-background-radius: 200;" text="Search" textFill="#328a9c">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Slider fx:id="mySlider" blockIncrement="1.0" layoutX="458.0" layoutY="48.0" max="56.7" min="-45.0" orientation="VERTICAL" prefHeight="327.0" prefWidth="23.0" style="-fx-background-color: #CBA20A; -fx-background-radius: 100;" />
+      <Label layoutX="104.0" layoutY="31.0" text="Weather App" textFill="WHITE">
+         <font>
+            <Font size="33.0" />
+         </font>
+         <effect>
+            <DropShadow height="15.0" radius="7.0" spread="0.75" width="15.0" />
+         </effect>
+      </Label>
+      <ImageView fitHeight="90.0" fitWidth="99.0" layoutX="17.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/WeatherApp.png" />
+         </image>
+      </ImageView>
+      <DatePicker fx:id="myDatePicker" layoutX="21.0" layoutY="148.0" />
+      <AnchorPane layoutX="19.0" layoutY="188.0" prefHeight="190.0" prefWidth="388.0" style="-fx-background-color: #0760BE; -fx-background-radius: 100;">
+         <children>
+            <AnchorPane layoutX="31.0" layoutY="19.0" prefHeight="150.0" prefWidth="324.0" style="-fx-background-color: #3AC3EB; -fx-background-radius: 100;">
+               <children>
+                  <Label fx:id="GreetingL" layoutX="40.0" layoutY="60.0" text="**Enter Place and Date**">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="tempratureLabel" layoutX="10.0" layoutY="53.0">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                  </Label>
+                  <ImageView fx:id="IV" fitHeight="105.0" fitWidth="118.0" layoutX="172.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label fx:id="statusLabel" layoutX="209.0" layoutY="112.0">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="forcast" layoutX="39.0" layoutY="114.0" textFill="#716666" />
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <Label fx:id="wea" layoutX="52.0" layoutY="209.0">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <Label layoutX="423.0" layoutY="221.0" text="0°C-">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="409.0" layoutY="46.0" text="56.7°C-">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="415.0" layoutY="356.0" text="-45°C-">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="413.0" layoutY="311.0" text="-30°C-">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="412.0" layoutY="285.0" text="-20°C-">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="411.0" layoutY="253.0" text="-10°C-">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="413.0" layoutY="190.0" text="10°C-">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="415.0" layoutY="161.0" text="20°C-">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="414.0" layoutY="128.0" text="30°C-">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="413.0" layoutY="98.0" text="40°C-">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="413.0" layoutY="69.0" text="50°C-">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="428.0" layoutY="87.0" text="45°C-">
+         <font>
+            <Font size="8.0" />
+         </font>
+      </Label>
+      <Label layoutX="427.0" layoutY="117.0" text="35°C-">
+         <font>
+            <Font size="8.0" />
+         </font>
+      </Label>
+      <Label layoutX="427.0" layoutY="147.0" text="25°C-">
+         <font>
+            <Font size="8.0" />
+         </font>
+      </Label>
+      <Label layoutX="426.0" layoutY="179.0" text="15°C-">
+         <font>
+            <Font size="8.0" />
+         </font>
+      </Label>
+      <Label layoutX="426.0" layoutY="209.0" text="5°C-">
+         <font>
+            <Font size="8.0" />
+         </font>
+      </Label>
+      <Label layoutX="425.0" layoutY="241.0" text="-5°C-">
+         <font>
+            <Font size="8.0" />
+         </font>
+      </Label>
+      <Label layoutX="423.0" layoutY="273.0" text="-15°C-">
+         <font>
+            <Font size="8.0" />
+         </font>
+      </Label>
+      <Label layoutX="424.0" layoutY="302.0" text="-25°C-">
+         <font>
+            <Font size="8.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

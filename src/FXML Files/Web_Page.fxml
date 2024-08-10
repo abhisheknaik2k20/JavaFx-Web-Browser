@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #872cd1;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Webpage_Loader">
+   <children>
+      <ToolBar layoutY="78.0" prefHeight="40.0" prefWidth="700.0">
+         <items>
+            <Button fx:id="reload_Button" mnemonicParsing="false" onAction="#Reload" style="-fx-font-weight: BOLD; -fx-background-radius: 200;" text="⟳">
+               <font>
+                  <Font size="15.0" />
+               </font></Button>
+            <Button fx:id="history" mnemonicParsing="false" onAction="#display_History" text="History">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button mnemonicParsing="false" onAction="#loadGame" prefHeight="25.0" prefWidth="52.0" text="Game" />
+         </items>
+      </ToolBar>
+      <ButtonBar layoutY="38.0" prefHeight="40.0" prefWidth="700.0" style="-fx-background-color: white;">
+         <buttons>
+            <Button fx:id="Back" maxWidth="50.0" mnemonicParsing="false" onAction="#go_Back" style="-fx-background-radius: 200;" text="BACK">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button maxWidth="50.0" mnemonicParsing="false" onAction="#loadoage_Button" style="-fx-background-radius: 200;" text="LOAD">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <TextField fx:id="textField" maxWidth="602.0" prefHeight="26.0" prefWidth="602.0" promptText="//Search URL??//" style="-fx-background-radius: 200;" />
+         </buttons>
+      </ButtonBar>
+      <ProgressBar fx:id="progressBar" layoutY="20.0" prefHeight="18.0" prefWidth="700.0" progress="0.0">
+         <cursor>
+            <Cursor fx:constant="WAIT" />
+         </cursor></ProgressBar>
+      <WebView fx:id="webView" layoutY="119.0" prefHeight="525.0" prefWidth="700.0" />
+      <Button fx:id="gb" layoutX="271.0" layoutY="655.0" mnemonicParsing="false" onAction="#loadGame" prefHeight="38.0" prefWidth="90.0" style="-fx-background-color: #872cd1;" textFill="#ffe703">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #3E0756;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WController">
+   <children>
+      <MediaView fx:id="mediaView" fitHeight="700.0" fitWidth="750.0" />
+      <ImageView fx:id="myimage" fitHeight="189.0" fitWidth="197.0" layoutX="73.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 30;">
+         <image>
+            <Image url="@../Images/Logo.png" />
+         </image>
+         <effect>
+            <DropShadow height="100.0" radius="49.5" width="100.0" />
+         </effect>
+      </ImageView>
+      <Label layoutX="284.0" layoutY="296.0" style="-fx-font-weight: BOLD; -fx-font-family: Courier New;" text="Web-Browser" textFill="#fffcfc">
+         <font>
+            <Font name="Calibri" size="49.0" />
+         </font>
+         <effect>
+            <DropShadow height="57.02" radius="39.1225" width="101.47">
+               <color>
+                  <Color red="0.0651228055357933" green="0.016842104494571686" blue="0.08421052992343903" />
+               </color>
+            </DropShadow>
+         </effect>
+         <cursor>
+            <Cursor fx:constant="DISAPPEAR" />
+         </cursor>
+      </Label>
+      <Button fx:id="Launch_Browser" layoutX="284.0" layoutY="417.0" mnemonicParsing="false" onAction="#Launch_Browser" style="-fx-border-radius: 200; -fx-background-radius: 220; -fx-text-fill: #872cd1;" text="Launch Browser" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
+         <font>
+            <Font size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow height="35.68" radius="17.3375" width="35.67" />
+               </bumpInput>
+               <light>
+                  <Light.Distant />
+               </light>
+            </Lighting>
+         </effect>
+      </Button>
+   </children>
+</AnchorPane>
