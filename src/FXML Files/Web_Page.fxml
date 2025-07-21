@@ -1,52 +1,242 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
-<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #872cd1;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Webpage_Loader">
-   <children>
-      <ToolBar layoutY="78.0" prefHeight="40.0" prefWidth="700.0">
-         <items>
-            <Button fx:id="reload_Button" mnemonicParsing="false" onAction="#Reload" style="-fx-font-weight: BOLD; -fx-background-radius: 200;" text="⟳">
+<BorderPane style="-fx-background-color: #202124;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BrowserController">
+   <top>
+      <VBox>
+         <children>
+            <!-- Modern Title Bar -->
+            <HBox alignment="CENTER_LEFT" spacing="0" style="-fx-background-color: #2d2e30; -fx-border-color: #404142; -fx-border-width: 0 0 1 0;">
+               <children>
+                  <!-- Window Controls Area -->
+                  <HBox alignment="CENTER_LEFT" spacing="12.0">
+                     <children>
+                        <!-- Browser Navigation -->
+                        <Button fx:id="Back" mnemonicParsing="false" onAction="#go_Back" style="-fx-background-color: transparent; -fx-text-fill: #9aa0a6; -fx-background-radius: 50; -fx-min-width: 32; -fx-min-height: 32; -fx-max-width: 32; -fx-max-height: 32; -fx-font-size: 16px;" text="‹">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Button fx:id="forward_Button" mnemonicParsing="false" onAction="#go_Forward" style="-fx-background-color: transparent; -fx-text-fill: #9aa0a6; -fx-background-radius: 50; -fx-min-width: 32; -fx-min-height: 32; -fx-max-width: 32; -fx-max-height: 32; -fx-font-size: 16px;" text="›">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Button fx:id="reload_Button" mnemonicParsing="false" onAction="#Reload" style="-fx-background-color: transparent; -fx-text-fill: #9aa0a6; -fx-background-radius: 50; -fx-min-width: 32; -fx-min-height: 32; -fx-max-width: 32; -fx-max-height: 32; -fx-font-size: 16px;" text="↻">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets left="8.0" />
+                     </padding>
+                  </HBox>
+                  
+                  <!-- Address Bar Container -->
+                  <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <TextField fx:id="textField" promptText="Search Google or type a URL" style="-fx-background-color: #303134; -fx-text-fill: #e8eaed; -fx-prompt-text-fill: #9aa0a6; -fx-background-radius: 24; -fx-border-color: transparent; -fx-border-width: 2; -fx-border-radius: 24; -fx-font-size: 14px; -fx-padding: 8 16 8 16;" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="Segoe UI" size="14.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" right="20.0" />
+                     </padding>
+                  </HBox>
+                  
+                  <!-- Right Side Controls -->
+                  <HBox alignment="CENTER_RIGHT" spacing="8.0">
+                     <children>
+                        <Button fx:id="dashboardBtn" mnemonicParsing="false" onAction="#toggleDashboard" style="-fx-background-color: #303134; -fx-text-fill: #e8eaed; -fx-background-radius: 6; -fx-border-color: #404142; -fx-border-width: 1; -fx-border-radius: 6; -fx-min-width: 36; -fx-min-height: 32; -fx-max-width: 36; -fx-max-height: 32; -fx-font-size: 16px;" text="≡">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Button fx:id="homeBtn" mnemonicParsing="false" onAction="#goHome" style="-fx-background-color: transparent; -fx-text-fill: #9aa0a6; -fx-background-radius: 50; -fx-min-width: 32; -fx-min-height: 32; -fx-max-width: 32; -fx-max-height: 32; -fx-font-size: 16px;" text="⌂">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        <Label fx:id="userLabel" style="-fx-background-color: #303134; -fx-background-radius: 16; -fx-padding: 6 12 6 12;" text="Guest" textFill="#9aa0a6">
+                           <font>
+                              <Font name="Segoe UI" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets right="8.0" />
+                     </padding>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="8.0" top="8.0" />
+               </padding>
+            </HBox>
+            
+            <!-- Secondary Toolbar -->
+            <HBox alignment="CENTER_LEFT" managed="false" spacing="0" style="-fx-background-color: #2d2e30; -fx-border-color: #404142; -fx-border-width: 0 0 1 0;" visible="false">
+               <children>
+                  <Button fx:id="history" mnemonicParsing="false" onAction="#display_History" style="-fx-background-color: transparent; -fx-text-fill: #9aa0a6; -fx-padding: 8 12 8 12;" text="History">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button fx:id="clearHistoryBtn" mnemonicParsing="false" onAction="#clearHistory" style="-fx-background-color: transparent; -fx-text-fill: #9aa0a6; -fx-padding: 8 12 8 12;" text="Clear History">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button fx:id="bookmarkBtn" mnemonicParsing="false" onAction="#addBookmark" style="-fx-background-color: transparent; -fx-text-fill: #9aa0a6; -fx-padding: 8 12 8 12;" text="★ Bookmark">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Separator orientation="VERTICAL" />
+                  <Button mnemonicParsing="false" onAction="#loadGame" style="-fx-background-color: transparent; -fx-text-fill: #9aa0a6; -fx-padding: 8 12 8 12;" text="🎮 Game" />
+               </children>
+               <padding>
+                  <Insets bottom="4.0" left="8.0" right="8.0" top="4.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   
+   <center>
+      <!-- Main Content Area with Split Pane -->
+      <SplitPane fx:id="mainSplitPane" dividerPositions="1.0" style="-fx-background-color: #202124;">
+         <!-- Web Browser -->
+         <WebView fx:id="webView" style="-fx-background-color: white;" />
+         
+         <!-- Modern Side Panel (Dashboard) -->
+         <VBox fx:id="sidePanel" minWidth="280.0" spacing="0" style="-fx-background-color: #292a2d; -fx-border-color: #404142; -fx-border-width: 1 0 0 1;" visible="false">
+            <children>
+               <!-- Dashboard Header -->
+               <VBox spacing="0" style="-fx-background-color: #2d2e30; -fx-border-color: #404142; -fx-border-width: 0 0 1 0;">
+                  <children>
+                     <HBox alignment="CENTER_LEFT" spacing="12.0">
+                        <children>
+                           <Label style="-fx-font-weight: bold; -fx-text-fill: #e8eaed;" text="Dashboard">
+                              <font>
+                                 <Font name="Segoe UI" size="16.0" />
+                              </font>
+                           </Label>
+                           <Region HBox.hgrow="ALWAYS" />
+                           <Button mnemonicParsing="false" onAction="#toggleDashboard" style="-fx-background-color: transparent; -fx-text-fill: #9aa0a6; -fx-background-radius: 4; -fx-min-width: 24; -fx-min-height: 24; -fx-max-width: 24; -fx-max-height: 24; -fx-font-size: 12px;" text="✕">
+                           </Button>
+                        </children>
+                        <padding>
+                           <Insets bottom="12.0" left="16.0" right="16.0" top="12.0" />
+                        </padding>
+                     </HBox>
+                  </children>
+               </VBox>
+               
+               <!-- Dashboard Content -->
+               <VBox spacing="16.0" VBox.vgrow="ALWAYS">
+                  <children>
+                     <!-- Recent History Section -->
+                     <VBox spacing="8.0">
+                        <children>
+                           <Label style="-fx-font-weight: bold; -fx-text-fill: #9aa0a6;" text="Recent History">
+                              <font>
+                                 <Font name="Segoe UI" size="14.0" />
+                              </font>
+                           </Label>
+                           <ListView fx:id="historyList" prefHeight="120.0" style="-fx-background-color: #202124; -fx-border-color: #404142; -fx-border-width: 1; -fx-border-radius: 8;" VBox.vgrow="SOMETIMES">
+                           </ListView>
+                           <Label style="-fx-text-fill: #6c6c6c; -fx-font-style: italic;" text="Your browsing history will appear here">
+                              <font>
+                                 <Font name="Segoe UI" size="11.0" />
+                              </font>
+                           </Label>
+                        </children>
+                     </VBox>
+                     
+                     <!-- Bookmarks Section -->
+                     <VBox spacing="8.0">
+                        <children>
+                           <Label style="-fx-font-weight: bold; -fx-text-fill: #9aa0a6;" text="Bookmarks">
+                              <font>
+                                 <Font name="Segoe UI" size="14.0" />
+                              </font>
+                           </Label>
+                           <ListView fx:id="bookmarksList" prefHeight="100.0" style="-fx-background-color: #202124; -fx-border-color: #404142; -fx-border-width: 1; -fx-border-radius: 8;" VBox.vgrow="SOMETIMES" />
+                           <Label style="-fx-text-fill: #6c6c6c; -fx-font-style: italic;" text="Bookmark your favorite sites">
+                              <font>
+                                 <Font name="Segoe UI" size="11.0" />
+                              </font>
+                           </Label>
+                        </children>
+                     </VBox>
+                     
+                     <!-- Quick Actions -->
+                     <VBox spacing="8.0">
+                        <children>
+                           <Label style="-fx-font-weight: bold; -fx-text-fill: #9aa0a6;" text="Quick Actions">
+                              <font>
+                                 <Font name="Segoe UI" size="14.0" />
+                              </font>
+                           </Label>
+                           <VBox spacing="4.0">
+                              <children>
+                                 <Button fx:id="viewFullHistoryBtn" maxWidth="Infinity" mnemonicParsing="false" onAction="#showFullHistory" style="-fx-background-color: #303134; -fx-text-fill: #e8eaed; -fx-background-radius: 6; -fx-border-color: transparent; -fx-padding: 8;" text="📜 View Full History" />
+                                 <Button fx:id="manageBookmarksBtn" maxWidth="Infinity" mnemonicParsing="false" onAction="#manageBookmarks" style="-fx-background-color: #303134; -fx-text-fill: #e8eaed; -fx-background-radius: 6; -fx-border-color: transparent; -fx-padding: 8;" text="⭐ Manage Bookmarks" />
+                                 <Button fx:id="addBookmarkBtn" maxWidth="Infinity" mnemonicParsing="false" onAction="#addBookmark" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-background-radius: 6; -fx-border-color: transparent; -fx-padding: 8;" text="➕ Bookmark This Page" />
+                                 <Button fx:id="userStatsBtn" maxWidth="Infinity" mnemonicParsing="false" onAction="#showUserStats" style="-fx-background-color: #303134; -fx-text-fill: #e8eaed; -fx-background-radius: 6; -fx-border-color: transparent; -fx-padding: 8;" text="📊 User Statistics" />
+                              </children>
+                           </VBox>
+                        </children>
+                     </VBox>
+                  </children>
+                  <padding>
+                     <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+                  </padding>
+               </VBox>
+            </children>
+         </VBox>
+      </SplitPane>
+   </center>
+   
+   <bottom>
+      <!-- Modern Status Bar -->
+      <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #2d2e30; -fx-border-color: #404142; -fx-border-width: 1 0 0 0;">
+         <children>
+            <Label fx:id="statusLabel" text="Ready" textFill="#9aa0a6">
                <font>
-                  <Font size="15.0" />
-               </font></Button>
-            <Button fx:id="history" mnemonicParsing="false" onAction="#display_History" text="History">
+                  <Font name="Segoe UI" size="11.0" />
+               </font>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="gb" mnemonicParsing="false" onAction="#loadGame" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 4 8 4 8;" text="🎮 Play Game">
+               <font>
+                  <Font name="Segoe UI" size="11.0" />
+               </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
-               </cursor></Button>
-            <Button mnemonicParsing="false" onAction="#loadGame" prefHeight="25.0" prefWidth="52.0" text="Game" />
-         </items>
-      </ToolBar>
-      <ButtonBar layoutY="38.0" prefHeight="40.0" prefWidth="700.0" style="-fx-background-color: white;">
-         <buttons>
-            <Button fx:id="Back" maxWidth="50.0" mnemonicParsing="false" onAction="#go_Back" style="-fx-background-radius: 200;" text="BACK">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor></Button>
-            <Button maxWidth="50.0" mnemonicParsing="false" onAction="#loadoage_Button" style="-fx-background-radius: 200;" text="LOAD">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor></Button>
-            <TextField fx:id="textField" maxWidth="602.0" prefHeight="26.0" prefWidth="602.0" promptText="//Search URL??//" style="-fx-background-radius: 200;" />
-         </buttons>
-      </ButtonBar>
-      <ProgressBar fx:id="progressBar" layoutY="20.0" prefHeight="18.0" prefWidth="700.0" progress="0.0">
-         <cursor>
-            <Cursor fx:constant="WAIT" />
-         </cursor></ProgressBar>
-      <WebView fx:id="webView" layoutY="119.0" prefHeight="525.0" prefWidth="700.0" />
-      <Button fx:id="gb" layoutX="271.0" layoutY="655.0" mnemonicParsing="false" onAction="#loadGame" prefHeight="38.0" prefWidth="90.0" style="-fx-background-color: #872cd1;" textFill="#ffe703">
-         <font>
-            <Font size="17.0" />
-         </font>
-      </Button>
-   </children>
-</AnchorPane>
+               </cursor>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="4.0" left="8.0" right="8.0" top="4.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

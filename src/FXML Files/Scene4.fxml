@@ -1,76 +1,190 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #872cd1;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="HomePage_Cont">
-   <children>
-      <AnchorPane layoutX="38.0" layoutY="30.0" prefHeight="640.0" prefWidth="638.0" style="-fx-background-color: #480064; -fx-background-radius: 100;">
+<BorderPane stylesheets="@scene4-styles.css" style="-fx-background-color: linear-gradient(to bottom, #0f0f23, #1a1a2e, #16213e);" 
+            minWidth="800.0" minHeight="600.0"
+            xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BrowserController">
+   <center>
+      <VBox alignment="CENTER" maxWidth="650.0" spacing="28.0" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS">
          <children>
-            <Label fx:id="Greet" layoutX="41.0" layoutY="240.0" prefHeight="30.0" prefWidth="555.0" text="Label" textFill="WHITE">
-               <font>
-                  <Font size="34.0" />
-               </font>
-            </Label>
-            <Label layoutX="167.0" layoutY="582.0" text="Current TIme:" textFill="WHITE">
-               <font>
-                  <Font size="19.0" />
-               </font>
-            </Label>
-            <AnchorPane layoutX="295.0" layoutY="569.0" prefHeight="54.0" prefWidth="139.0" style="-fx-background-color: #ECE74C; -fx-background-radius: 100;">
+            <!-- Modern Header Card -->
+            <VBox alignment="CENTER" spacing="16.0" style="-fx-background-color: linear-gradient(to bottom, #2a2d3a, #353945); -fx-background-radius: 20; -fx-border-color: #4a5568; -fx-border-width: 1.5; -fx-border-radius: 20;">
                <children>
-                  <AnchorPane layoutX="9.0" layoutY="9.0" prefHeight="36.0" prefWidth="120.0" style="-fx-background-color: #000000; -fx-background-radius: 100;">
+                  <VBox alignment="CENTER" spacing="12.0">
                      <children>
-                        <Label fx:id="Date_S" layoutX="8.0" prefHeight="36.0" prefWidth="114.0" text=" 10:10:10 am" textFill="#00ff26">
+                        <Label fx:id="Greet" text="Good Morning User" textFill="#ffffff" style="-fx-font-weight: 300;">
                            <font>
-                              <Font size="19.0" />
+                              <Font name="Segoe UI Light" size="36.0" />
+                           </font>
+                           <effect>
+                              <DropShadow color="#00000040" height="8.0" radius="4.0" width="8.0" />
+                           </effect>
+                        </Label>
+                        <Label fx:id="TodayDate" textFill="#a0aec0">
+                           <font>
+                              <Font name="Segoe UI" size="16.0" />
                            </font>
                         </Label>
                      </children>
-                  </AnchorPane>
+                  </VBox>
                </children>
-            </AnchorPane>
-            <Label layoutX="46.0" layoutY="284.0" text="Pick a Default Search Engine:" textFill="#fffbfb">
-               <font>
-                  <Font size="19.0" />
-               </font>
-            </Label>
-            <ChoiceBox fx:id="cho" layoutX="43.0" layoutY="321.0" prefHeight="26.0" prefWidth="157.0" />
-            <Button layoutX="208.0" layoutY="319.0" mnemonicParsing="false" onAction="#go_WEB" style="-fx-font-weight: BOLD; -fx-background-radius: 200;" text="GO!">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Button>
-            <Label fx:id="CHOICE" layoutX="43.0" layoutY="346.0" prefHeight="28.0" prefWidth="226.0" textFill="YELLOW">
-               <font>
-                  <Font size="19.0" />
-               </font>
-            </Label>
-            <ImageView fx:id="imageView" fitHeight="196.0" fitWidth="365.0" layoutX="122.0" layoutY="360.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="TodayDate" layoutX="54.0" layoutY="59.0" textFill="#f4e23a">
-               <font>
-                  <Font size="30.0" />
-               </font>
-            </Label>
-            <AnchorPane layoutX="389.0" layoutY="95.0" prefHeight="126.0" prefWidth="195.0" style="-fx-background-color: Yellow; -fx-background-radius: 50;">
+               <padding>
+                  <Insets bottom="28.0" left="40.0" right="40.0" top="28.0" />
+               </padding>
+               <effect>
+                  <DropShadow color="#00000050" height="25.0" radius="15.0" width="25.0" />
+               </effect>
+            </VBox>
+            
+            <!-- Search Engine Selection Card -->
+            <VBox alignment="CENTER" spacing="24.0" style="-fx-background-color: linear-gradient(to bottom, #2a2d3a, #353945); -fx-background-radius: 20; -fx-border-color: #4a5568; -fx-border-width: 1.5; -fx-border-radius: 20;">
                <children>
-                  <Button fx:id="Weather" layoutX="29.0" layoutY="64.0" mnemonicParsing="false" onAction="#wAPP" style="-fx-background-radius: 200;" text="Weather App" textFill="#04090b">
+                  <Label text="Choose Your Default Search Engine" textFill="#ffffff" style="-fx-font-weight: 600;">
                      <font>
-                        <Font size="19.0" />
-                     </font>
-                  </Button>
-                  <Label layoutX="12.0" layoutY="14.0" prefHeight="50.0" prefWidth="172.0" text=" Try Our Weather App" textFill="#202020">
-                     <font>
-                        <Font size="16.0" />
+                        <Font name="Segoe UI" size="22.0" />
                      </font>
                   </Label>
+                  
+                  <!-- Search Engine Selection Controls -->
+                  <VBox alignment="CENTER" spacing="20.0">
+                     <children>
+                        <ChoiceBox fx:id="cho" prefHeight="50.0" prefWidth="320.0" styleClass="choice-box">
+                           <effect>
+                              <DropShadow color="#00000040" height="12.0" radius="6.0" width="12.0" />
+                           </effect>
+                        </ChoiceBox>
+                        
+                        <Button mnemonicParsing="false" onAction="#go_WEB" maxWidth="280.0" prefHeight="54.0" 
+                                style="-fx-background-color: linear-gradient(to bottom, #4299e1, #3182ce); 
+                                       -fx-text-fill: white; 
+                                       -fx-background-radius: 27; 
+                                       -fx-border-color: transparent; 
+                                       -fx-font-weight: 600;
+                                       -fx-font-size: 18px;" 
+                                text="🚀 Start Browsing">
+                           <font>
+                              <Font name="Segoe UI" size="18.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <effect>
+                              <DropShadow color="#3182ce80" height="20.0" radius="10.0" width="20.0" />
+                           </effect>
+                        </Button>
+                     </children>
+                  </VBox>
                </children>
-            </AnchorPane>
+               <padding>
+                  <Insets bottom="32.0" left="40.0" right="40.0" top="32.0" />
+               </padding>
+               <effect>
+                  <DropShadow color="#00000050" height="25.0" radius="15.0" width="25.0" />
+               </effect>
+            </VBox>
+            
+            <!-- Account Management Card -->
+            <VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: linear-gradient(to bottom, #2a2d3a, #353945); -fx-background-radius: 20; -fx-border-color: #4a5568; -fx-border-width: 1.5; -fx-border-radius: 20;">
+               <children>
+                  <Label text="Account Management" textFill="#ffffff" style="-fx-font-weight: 600;">
+                     <font>
+                        <Font name="Segoe UI" size="20.0" />
+                     </font>
+                  </Label>
+                  
+                  <HBox alignment="CENTER" spacing="16.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#go_Back" prefHeight="44.0" prefWidth="150.0"
+                                style="-fx-background-color: linear-gradient(to bottom, #38a169, #2f855a); 
+                                       -fx-text-fill: white; 
+                                       -fx-background-radius: 12; 
+                                       -fx-border-color: transparent; 
+                                       -fx-font-weight: 500;" 
+                                text="👤 Switch User">
+                           <font>
+                              <Font name="Segoe UI" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <effect>
+                              <DropShadow color="#2f855a60" height="12.0" radius="6.0" width="12.0" />
+                           </effect>
+                        </Button>
+                        
+                        <Button mnemonicParsing="false" onAction="#showUserInfo" prefHeight="44.0" prefWidth="150.0"
+                                style="-fx-background-color: linear-gradient(to bottom, #805ad5, #6b46c1); 
+                                       -fx-text-fill: white; 
+                                       -fx-background-radius: 12; 
+                                       -fx-border-color: transparent; 
+                                       -fx-font-weight: 500;" 
+                                text="ℹ️ User Info">
+                           <font>
+                              <Font name="Segoe UI" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <effect>
+                              <DropShadow color="#6b46c160" height="12.0" radius="6.0" width="12.0" />
+                           </effect>
+                        </Button>
+                        
+                        <Button mnemonicParsing="false" onAction="#showHistory" prefHeight="44.0" prefWidth="150.0"
+                                style="-fx-background-color: linear-gradient(to bottom, #ed8936, #dd6b20); 
+                                       -fx-text-fill: white; 
+                                       -fx-background-radius: 12; 
+                                       -fx-border-color: transparent; 
+                                       -fx-font-weight: 500;" 
+                                text="📜 History">
+                           <font>
+                              <Font name="Segoe UI" size="14.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <effect>
+                              <DropShadow color="#dd6b2060" height="12.0" radius="6.0" width="12.0" />
+                           </effect>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="28.0" left="40.0" right="40.0" top="28.0" />
+               </padding>
+               <effect>
+                  <DropShadow color="#00000050" height="25.0" radius="15.0" width="25.0" />
+               </effect>
+            </VBox>
+            
+            <!-- Help Text -->
+            <Label maxWidth="550.0" text="Select your preferred search engine and click 'Start Browsing' to begin. Your preferences and history will be automatically saved to your profile." 
+                   textFill="#a0aec0" wrapText="true" style="-fx-text-alignment: center; -fx-font-weight: 400;">
+               <font>
+                  <Font name="Segoe UI" size="14.0" />
+               </font>
+               <effect>
+                  <DropShadow color="#00000030" height="4.0" radius="2.0" width="4.0" />
+               </effect>
+            </Label>
          </children>
-      </AnchorPane>
-   </children>
-</AnchorPane>
+         <padding>
+            <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+         </padding>
+      </VBox>
+   </center>
+</BorderPane>

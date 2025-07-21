@@ -1,54 +1,150 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #3E0756;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Login_Controller">
-   <children>
-      <MediaView fx:id="mediaView" fitHeight="700.0" fitWidth="700.0" />
-      <AnchorPane layoutX="94.0" layoutY="63.0" prefHeight="574.0" prefWidth="470.0" style="-fx-background-color: #2C0445; -fx-background-radius: 150;" />
-      <Label fx:id="Password" layoutX="269.0" layoutY="367.0" text="Password" textFill="WHITE">
-         <font>
-            <Font size="29.0" />
-         </font>
-      </Label>
-      <PasswordField fx:id="passwordfld" layoutX="175.0" layoutY="427.0" prefHeight="30.0" prefWidth="308.0" promptText="Enter Password" />
-      <Button layoutX="241.0" layoutY="493.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="176.0" style="-fx-background-color: #2C0445;" text="Forgot Password?" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-      <Label fx:id="nameLabel" layoutX="255.0" layoutY="88.0" text=".........." textFill="WHITE">
-         <font>
-            <Font size="29.0" />
-         </font>
-      </Label>
-      <Label fx:id="incorrect" layoutX="257.0" layoutY="471.0" textFill="#e5ff00">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Button fx:id="back" layoutX="59.0" layoutY="42.0" mnemonicParsing="false" onAction="#go_Back" prefHeight="43.0" prefWidth="63.0" style="-fx-background-radius: 600;" text="Back" textFill="#872cd1">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
-      <Circle fill="#f2b400" layoutX="329.0" layoutY="255.0" radius="106.0" stroke="#f2b400" strokeType="INSIDE" />
-      <ImageView fx:id="profile" fitHeight="191.0" fitWidth="237.0" layoutX="233.0" layoutY="159.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/360_F_571082432_Qq45LQGlZsuby0ZGbrd79aUTSQikgcgc-fotor-2023100182843.png" />
-         </image>
-      </ImageView>
-   </children>
-</AnchorPane>
+<BorderPane style="-fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AuthController">
+   <top>
+      <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" onAction="#go_Back" 
+                    style="-fx-background-color: transparent; -fx-text-fill: #9aa0a6; -fx-border-color: #404142; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 16 8 16;" 
+                    text="← Back">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="24.0" right="24.0" top="24.0" />
+         </padding>
+      </HBox>
+   </top>
+   
+   <center>
+      <VBox alignment="CENTER" maxWidth="420.0" spacing="32.0" style="-fx-background-color: #292a2d; -fx-background-radius: 16; -fx-border-color: #404142; -fx-border-width: 1; -fx-border-radius: 16;">
+         <children>
+            <!-- Welcome Header -->
+            <VBox alignment="CENTER" spacing="16.0">
+               <children>
+                  <Label text="Welcome Back!" textFill="#e8eaed" style="-fx-font-weight: 300;">
+                     <font>
+                        <Font name="Segoe UI Light" size="32.0" />
+                     </font>
+                  </Label>
+                  
+                  <!-- User Profile Section -->
+                  <VBox alignment="CENTER" spacing="16.0">
+                     <children>
+                        <!-- Modern Avatar Container -->
+                        <StackPane>
+                           <children>
+                              <Circle fill="#303134" radius="60.0" stroke="#404142" strokeWidth="2.0" />
+                              <ImageView fx:id="profile" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Images/Avatar-1.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        
+                        <VBox alignment="CENTER" spacing="4.0">
+                           <children>
+                              <Label text="Sign in as" textFill="#9aa0a6">
+                                 <font>
+                                    <Font name="Segoe UI" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="nameLabel" text="Username" textFill="#e8eaed" style="-fx-font-weight: 500;">
+                                 <font>
+                                    <Font name="Segoe UI" size="20.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            
+            <!-- Login Form -->
+            <VBox alignment="CENTER" spacing="20.0" maxWidth="320.0">
+               <children>
+                  <VBox spacing="8.0">
+                     <children>
+                        <Label text="Password" textFill="#e8eaed" style="-fx-font-weight: 500;">
+                           <font>
+                              <Font name="Segoe UI" size="14.0" />
+                           </font>
+                        </Label>
+                        <PasswordField fx:id="passwordfld" maxWidth="Infinity" prefHeight="44.0" promptText="Enter your password" 
+                                       style="-fx-background-color: #202124; -fx-text-fill: #e8eaed; -fx-prompt-text-fill: #9aa0a6; -fx-border-color: #404142; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 14px; -fx-padding: 8 12 8 12;" />
+                        
+                        <!-- Error message -->
+                        <Label fx:id="incorrect" maxWidth="Infinity" textFill="#ea4335" visible="false">
+                           <font>
+                              <Font name="Segoe UI" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  
+                  <!-- Action buttons -->
+                  <VBox alignment="CENTER" spacing="12.0" maxWidth="320.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#handleLogin" maxWidth="Infinity" prefHeight="44.0" 
+                                style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-background-radius: 8; -fx-border-color: transparent; -fx-font-weight: 500;" 
+                                text="Sign In">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                        
+                        <Button mnemonicParsing="false" onAction="#go_Back" maxWidth="Infinity" prefHeight="44.0" 
+                                style="-fx-background-color: transparent; -fx-text-fill: #9aa0a6; -fx-border-color: #404142; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;" 
+                                text="Switch Account">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            
+            <!-- Additional Options -->
+            <VBox alignment="CENTER" spacing="12.0">
+               <children>
+                  <Button mnemonicParsing="false" 
+                          style="-fx-background-color: transparent; -fx-text-fill: #1a73e8; -fx-border-color: transparent; -fx-underline: true;" 
+                          text="Forgot your password?">
+                     <font>
+                        <Font name="Segoe UI" size="12.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="32.0" left="32.0" right="32.0" top="32.0" />
+         </padding>
+         <BorderPane.margin>
+            <Insets bottom="40.0" left="40.0" right="40.0" top="20.0" />
+         </BorderPane.margin>
+      </VBox>
+   </center>
+</BorderPane>

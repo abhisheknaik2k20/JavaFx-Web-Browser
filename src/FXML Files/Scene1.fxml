@@ -1,62 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.Light.Distant?>
-<?import javafx.scene.effect.Lighting?>
-<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" style="-fx-background-color: #3E0756;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WController">
+<VBox alignment="CENTER" spacing="40.0" style="-fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);" 
+      minWidth="600.0" minHeight="400.0"
+      xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App">
    <children>
-      <MediaView fx:id="mediaView" fitHeight="700.0" fitWidth="750.0" />
-      <ImageView fx:id="myimage" fitHeight="189.0" fitWidth="197.0" layoutX="73.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true" style="-fx-rotate: 30;">
-         <image>
-            <Image url="@../Images/Logo.png" />
-         </image>
-         <effect>
-            <DropShadow height="100.0" radius="49.5" width="100.0" />
-         </effect>
-      </ImageView>
-      <Label layoutX="284.0" layoutY="296.0" style="-fx-font-weight: BOLD; -fx-font-family: Courier New;" text="Web-Browser" textFill="#fffcfc">
-         <font>
-            <Font name="Calibri" size="49.0" />
-         </font>
-         <effect>
-            <DropShadow height="57.02" radius="39.1225" width="101.47">
-               <color>
-                  <Color red="0.0651228055357933" green="0.016842104494571686" blue="0.08421052992343903" />
-               </color>
-            </DropShadow>
-         </effect>
-         <cursor>
-            <Cursor fx:constant="DISAPPEAR" />
-         </cursor>
-      </Label>
-      <Button fx:id="Launch_Browser" layoutX="284.0" layoutY="417.0" mnemonicParsing="false" onAction="#Launch_Browser" style="-fx-border-radius: 200; -fx-background-radius: 220; -fx-text-fill: #872cd1;" text="Launch Browser" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS">
-         <font>
-            <Font size="16.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-         <effect>
-            <Lighting>
-               <bumpInput>
-                  <Shadow height="35.68" radius="17.3375" width="35.67" />
-               </bumpInput>
-               <light>
-                  <Light.Distant />
-               </light>
-            </Lighting>
-         </effect>
-      </Button>
+      <!-- Top spacer for vertical centering -->
+      <Region VBox.vgrow="ALWAYS" />
+      
+      <!-- Modern Hero Section -->
+      <VBox alignment="CENTER" spacing="30.0" maxWidth="600.0">
+         <children>
+            <!-- App Icon and Brand -->
+            <VBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <ImageView fx:id="myimage" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Images/Logo.png" />
+                     </image>
+                     <effect>
+                        <DropShadow color="#1a73e8" height="40.0" radius="20.0" width="40.0" />
+                     </effect>
+                  </ImageView>
+                  
+                  <VBox alignment="CENTER" spacing="8.0">
+                     <children>
+                        <Label style="-fx-font-weight: 300; -fx-text-alignment: center;" text="JavaFX Web Browser" textFill="#e8eaed">
+                           <font>
+                              <Font name="Segoe UI Light" size="48.0" />
+                           </font>
+                        </Label>
+                        <Label style="-fx-text-alignment: center;" text="Fast, secure, and modern browsing experience" textFill="#9aa0a6" wrapText="true">
+                           <font>
+                              <Font name="Segoe UI" size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            
+            <!-- Feature Highlights -->
+            <HBox alignment="CENTER" spacing="40.0" maxWidth="500.0">
+               <children>
+                  <VBox alignment="CENTER" spacing="8.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-font-weight: bold; -fx-text-alignment: center;" text="🔒" textFill="#4285f4">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Label style="-fx-text-alignment: center;" text="Secure" textFill="#e8eaed">
+                           <font>
+                              <Font name="Segoe UI" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" spacing="8.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-font-weight: bold; -fx-text-alignment: center;" text="⚡" textFill="#34a853">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Label style="-fx-text-alignment: center;" text="Fast" textFill="#e8eaed">
+                           <font>
+                              <Font name="Segoe UI" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" spacing="8.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-font-weight: bold; -fx-text-alignment: center;" text="🎨" textFill="#fbbc04">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Label style="-fx-text-alignment: center;" text="Modern" textFill="#e8eaed">
+                           <font>
+                              <Font name="Segoe UI" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      
+      <!-- Call to Action -->
+      <VBox alignment="CENTER" spacing="16.0">
+         <children>
+            <Button fx:id="Launch_Browser" mnemonicParsing="false" onAction="#Launch_Browser" 
+                    prefHeight="56.0" prefWidth="280.0" maxWidth="350.0" minWidth="250.0"
+                    style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-background-radius: 28; -fx-border-color: transparent; -fx-font-weight: 500;" 
+                    text="Get Started" textAlignment="CENTER">
+               <font>
+                  <Font name="Segoe UI" size="16.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <DropShadow color="#1a73e850" height="20.0" radius="10.0" width="20.0" />
+               </effect>
+            </Button>
+            
+            <Label style="-fx-text-alignment: center;" text="Click to start your browsing journey" textFill="#9aa0a6">
+               <font>
+                  <Font name="Segoe UI" size="12.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      
+      <!-- Bottom spacer for vertical centering -->
+      <Region VBox.vgrow="ALWAYS" />
    </children>
-</AnchorPane>
+   <padding>
+      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+   </padding>
+</VBox>
