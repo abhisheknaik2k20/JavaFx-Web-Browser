@@ -106,32 +106,32 @@ public class AuthController {
         if (!validateInput(username, password, confirmPassword)) return;
         
         if (userManager.registerUser(username, password)) {
-            Utils.showInfo("Account Created", "Your account has been created successfully!");
+            BrowserUtils.showInfo("Account Created", "Your account has been created successfully!");
             navigateToProfile();
         } else {
-            Utils.showAlert("Registration Failed", "Failed to create account. Please try again.");
+            BrowserUtils.showAlert("Registration Failed", "Failed to create account. Please try again.");
         }
     }
     
     private boolean validateInput(String username, String password, String confirmPassword) {
         if (username.isEmpty()) {
-            Utils.showAlert("Username Required", "Please enter a username.");
+            BrowserUtils.showAlert("Username Required", "Please enter a username.");
             return false;
         }
         if (username.length() < 3) {
-            Utils.showAlert("Username Too Short", "Username must be at least 3 characters long.");
+            BrowserUtils.showAlert("Username Too Short", "Username must be at least 3 characters long.");
             return false;
         }
         if (userManager.getAllUsernames().contains(username)) {
-            Utils.showAlert("Username Exists", "This username is already taken.");
+            BrowserUtils.showAlert("Username Exists", "This username is already taken.");
             return false;
         }
         if (password.isEmpty() || password.length() < 6) {
-            Utils.showAlert("Weak Password", "Password must be at least 6 characters long.");
+            BrowserUtils.showAlert("Weak Password", "Password must be at least 6 characters long.");
             return false;
         }
         if (!password.equals(confirmPassword)) {
-            Utils.showAlert("Password Mismatch", "Passwords do not match.");
+            BrowserUtils.showAlert("Password Mismatch", "Passwords do not match.");
             return false;
         }
         return true;
@@ -167,19 +167,19 @@ public class AuthController {
         String selectedUser = userComboBox.getValue();
         
         if (selectedUser == null) {
-            Utils.showAlert("Selection Required", "Please select a user or choose to create a new one.");
+            BrowserUtils.showAlert("Selection Required", "Please select a user or choose to create a new one.");
             return;
         }
         
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         
         if (selectedUser.equals("Create New User")) {
-            Utils.loadScene("/FXML Files/Example.fxml", stage, controller -> {
+            BrowserUtils.loadScene("/FXML Files/Example.fxml", stage, controller -> {
                 AuthController authController = (AuthController) controller;
                 authController.initKeyActions(stage.getScene(), stage, null);
             });
         } else {
-            Utils.loadScene("/FXML Files/Scene3.fxml", stage, controller -> {
+            BrowserUtils.loadScene("/FXML Files/Scene3.fxml", stage, controller -> {
                 AuthController authController = (AuthController) controller;
                 authController.display_Name(selectedUser, stage, stage.getScene());
             });
@@ -197,7 +197,7 @@ public class AuthController {
         String selectedUser = userComboBox.getValue();
         
         if (selectedUser == null || selectedUser.equals("Create New User")) {
-            Utils.showAlert("Selection Required", "Please select a user to delete.");
+            BrowserUtils.showAlert("Selection Required", "Please select a user to delete.");
             return;
         }
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -206,9 +206,9 @@ public class AuthController {
         confirmAlert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 if (userManager.deleteUser(selectedUser)) {
-                    Utils.showInfo("User Deleted", "User account deleted successfully.");
+                    BrowserUtils.showInfo("User Deleted", "User account deleted successfully.");
                     loadUsers();
-                } else Utils.showAlert("Deletion Failed", "Failed to delete user account.");
+                } else BrowserUtils.showAlert("Deletion Failed", "Failed to delete user account.");
             }
         });
     }
@@ -223,18 +223,18 @@ public class AuthController {
     public void go_Back(ActionEvent event) {
         try {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Utils.loadScene("FXML Files/Scene1.fxml", stage, controller -> {});
+            BrowserUtils.loadScene("FXML Files/Scene1.fxml", stage, controller -> {});
         } catch (Exception e) {
-            Utils.showError("Navigation Error", "Failed to navigate back.");
+            BrowserUtils.showError("Navigation Error", "Failed to navigate back.");
         }
     }
     
     private void navigateToProfile() {
-        Utils.loadScene("/FXML Files/Scene2.fxml", stage, null);
+        BrowserUtils.loadScene("/FXML Files/Scene2.fxml", stage, null);
     }
     
     private void navigateToHome(String username) {
-        Utils.loadScene("/FXML Files/Scene4.fxml", stage, controller -> {
+        BrowserUtils.loadScene("/FXML Files/Scene4.fxml", stage, controller -> {
             BrowserController homeController = (BrowserController) controller;
             homeController.initializeAsHomePage(username);
             homeController.setUserManager(userManager);
@@ -264,7 +264,7 @@ public class AuthController {
             messageLabel.setText(message);
             messageLabel.setVisible(true);
         } else {
-            Utils.showAlert("Login Error", message);
+            BrowserUtils.showAlert("Login Error", message);
         }
     }
 

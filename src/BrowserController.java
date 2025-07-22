@@ -48,7 +48,7 @@ public class BrowserController implements Initializable {
     private Map<Tab, WebView> tabWebViewMap = new HashMap<>();
     private int tabCounter = 1;
     
-    private SearchEngine selectedEngine;
+    private BrowserUtils.SearchEngine selectedEngine;
     private Stage stage;
     private String username;
     private UserManager userManager;
@@ -60,7 +60,7 @@ public class BrowserController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (cho != null) {
-            cho.getItems().addAll(SearchEngine.getNames());
+            cho.getItems().addAll(BrowserUtils.SearchEngine.getNames());
             cho.setOnAction(this::User_Selected);
         }
         
@@ -281,7 +281,7 @@ public class BrowserController implements Initializable {
     }
     
     public void initializeAsBrowser(int flag, Stage stage, Scene scene, String username) {
-        this.selectedEngine = SearchEngine.fromFlag(flag);
+        this.selectedEngine = BrowserUtils.SearchEngine.fromFlag(flag);
         this.stage = stage;
         this.username = username;
         initializeWebView();
@@ -294,7 +294,7 @@ public class BrowserController implements Initializable {
         if (username != null && cho != null) {
             String defaultEngine = userManager.getDefaultSearchEngine(username);
             cho.setValue(defaultEngine);
-            selectedEngine = SearchEngine.fromName(defaultEngine);
+            selectedEngine = BrowserUtils.SearchEngine.fromName(defaultEngine);
         }
         if (username != null) {
             List<String> savedBookmarks = userManager.getUserBookmarks(username);
@@ -324,7 +324,7 @@ public class BrowserController implements Initializable {
     public void User_Selected(ActionEvent event) {
         String engineName = cho.getValue();
         if (engineName != null) {
-            selectedEngine = SearchEngine.fromName(engineName);
+            selectedEngine = BrowserUtils.SearchEngine.fromName(engineName);
             if (userManager != null && username != null) {
                 userManager.setDefaultSearchEngine(username, engineName);
             }
@@ -334,7 +334,7 @@ public class BrowserController implements Initializable {
     @FXML
     public void go_WEB(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Utils.loadScene("/FXML Files/Web_Page.fxml", stage, controller -> {
+        BrowserUtils.loadScene("/FXML Files/Web_Page.fxml", stage, controller -> {
             BrowserController webController = (BrowserController) controller;
             webController.initializeAsBrowser(selectedEngine.getFlag(), stage, stage.getScene(), username);
             webController.setUserManager(userManager);
@@ -353,7 +353,7 @@ public class BrowserController implements Initializable {
             }
         }
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Utils.loadScene("/FXML Files/Scene2.fxml", stage, null);
+        BrowserUtils.loadScene("/FXML Files/Scene2.fxml", stage, null);
     }
     
     private void updateUserInterface() {
@@ -475,7 +475,7 @@ public class BrowserController implements Initializable {
         
         String text = textField.getText().trim();
         if (text.isEmpty()) return;
-        String url = Utils.buildUrl(text, selectedEngine.getSearchUrl());
+        String url = BrowserUtils.buildUrl(text, selectedEngine.getSearchUrl());
         engine.load(url);
     }
 
@@ -517,7 +517,7 @@ public class BrowserController implements Initializable {
             List<String> userHistory = userManager.getUserHistory(username);
             String historyText = userHistory.isEmpty() ? "No browsing history found." : 
                 "=== Browsing History for " + username + " ===\n" + String.join("\n", userHistory);
-            Utils.showInfo("Browsing History", historyText);
+            BrowserUtils.showInfo("Browsing History", historyText);
             updateStatus("Displayed history for " + username);
         } else {
             WebEngine engine = getCurrentEngine();
@@ -526,7 +526,7 @@ public class BrowserController implements Initializable {
                 StringBuilder historyText = new StringBuilder("=== Current Session History ===\n");
                 history.getEntries().forEach(entry -> 
                     historyText.append(entry.getLastVisitedDate()).append(" - ").append(entry.getUrl()).append("\n"));
-                Utils.showInfo("Session History", historyText.toString());
+                BrowserUtils.showInfo("Session History", historyText.toString());
                 updateStatus("Displayed session history");
             }
         }
@@ -572,7 +572,7 @@ public class BrowserController implements Initializable {
     @FXML
     public void goHome() {
         try {
-            Utils.loadScene("FXML Files/Scene4.fxml", stage, controller -> {
+            BrowserUtils.loadScene("FXML Files/Scene4.fxml", stage, controller -> {
                 if (controller instanceof BrowserController) {
                     ((BrowserController) controller).initializeAsHomePage(username);
                     ((BrowserController) controller).setUserManager(userManager);
@@ -623,7 +623,7 @@ public class BrowserController implements Initializable {
     public void showFullHistory() {
         if (userManager != null && username != null) {
             List<String> fullHistory = userManager.getUserHistory(username);
-            Utils.showInfo("Full Browsing History", 
+            BrowserUtils.showInfo("Full Browsing History", 
                      fullHistory.isEmpty() ? "No browsing history found." : String.join("\n", fullHistory));
         }
     }
@@ -632,10 +632,10 @@ public class BrowserController implements Initializable {
     public void manageBookmarks() {
         if (userManager != null && username != null) {
             List<String> bookmarks = userManager.getUserBookmarks(username);
-            Utils.showInfo("Bookmarks", 
+            BrowserUtils.showInfo("Bookmarks", 
                      bookmarks.isEmpty() ? "No bookmarks saved." : String.join("\n", bookmarks));
         } else {
-            Utils.showInfo("Bookmarks", 
+            BrowserUtils.showInfo("Bookmarks", 
                      userBookmarks.isEmpty() ? "No bookmarks saved." : String.join("\n", userBookmarks));
         }
     }
@@ -645,7 +645,7 @@ public class BrowserController implements Initializable {
         if (userManager != null && username != null) {
             List<String> history = userManager.getUserHistory(username);
             int tabCount = (tabPane != null) ? tabPane.getTabs().size() : 1;
-            Utils.showInfo("User Statistics", String.format(
+            BrowserUtils.showInfo("User Statistics", String.format(
                 "User: %s\nTotal pages visited: %d\nBookmarks saved: %d\nOpen tabs: %d",
                 username, history.size(), userBookmarks.size(), tabCount));
         }
@@ -656,7 +656,7 @@ public class BrowserController implements Initializable {
         if (userManager != null && username != null) {
             List<String> history = userManager.getUserHistory(username);
             int tabCount = (tabPane != null) ? tabPane.getTabs().size() : 1;
-            Utils.showInfo("User Information", String.format(
+            BrowserUtils.showInfo("User Information", String.format(
                 "User: %s\nTotal pages visited: %d\nOpen tabs: %d", 
                 username, history.size(), tabCount));
         }
@@ -666,7 +666,7 @@ public class BrowserController implements Initializable {
     public void showHistory(ActionEvent event) {
         if (userManager != null && username != null) {
             List<String> history = userManager.getUserHistory(username);
-            Utils.showInfo("Browsing History", history.isEmpty() ? 
+            BrowserUtils.showInfo("Browsing History", history.isEmpty() ? 
                 "No browsing history found." : String.join("\n", history));
         }
     }

@@ -42,6 +42,6 @@ public class App extends Application {
     @FXML
     public void Launch_Browser(ActionEvent e) {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-        Utils.loadScene("/FXML Files/Scene2.fxml", stage, null);
+        BrowserUtils.loadScene("/FXML Files/Scene2.fxml", stage, null);
     }
 }
