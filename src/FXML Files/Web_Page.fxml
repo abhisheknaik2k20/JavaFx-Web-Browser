@@ -7,6 +7,8 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -41,6 +43,23 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
+                        
+                        <!-- Tab Management Buttons -->
+                        <Separator orientation="VERTICAL" />
+                        <HBox fx:id="tabButtonsContainer" alignment="CENTER_LEFT" spacing="4.0">
+                           <children>
+                              <Button fx:id="newTabBtn" mnemonicParsing="false" onAction="#createNewTab" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-background-radius: 4; -fx-min-width: 28; -fx-min-height: 28; -fx-max-width: 28; -fx-max-height: 28; -fx-font-size: 14px;" text="+">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                              <Button fx:id="closeTabBtn" mnemonicParsing="false" onAction="#closeCurrentTab" style="-fx-background-color: #ea4335; -fx-text-fill: white; -fx-background-radius: 4; -fx-min-width: 28; -fx-min-height: 28; -fx-max-width: 28; -fx-max-height: 28; -fx-font-size: 12px;" text="✕">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                           </children>
+                        </HBox>
                      </children>
                      <padding>
                         <Insets left="8.0" />
@@ -122,8 +141,22 @@
    <center>
       <!-- Main Content Area with Split Pane -->
       <SplitPane fx:id="mainSplitPane" dividerPositions="1.0" style="-fx-background-color: #202124;">
-         <!-- Web Browser -->
-         <WebView fx:id="webView" style="-fx-background-color: white;" />
+         <!-- Tab Pane Container for Multiple Tabs -->
+         <VBox spacing="0" style="-fx-background-color: #202124;">
+            <children>
+               <!-- TabPane for multiple browser tabs -->
+               <TabPane fx:id="tabPane" side="TOP" style="-fx-background-color: #202124;" tabClosingPolicy="SELECTED_TAB" VBox.vgrow="ALWAYS">
+                  <tabs>
+                     <!-- Initial Tab - will be created programmatically -->
+                     <Tab fx:id="initialTab" closable="false" text="Home">
+                        <content>
+                           <WebView fx:id="webView" style="-fx-background-color: white;" />
+                        </content>
+                     </Tab>
+                  </tabs>
+               </TabPane>
+            </children>
+         </VBox>
          
          <!-- Modern Side Panel (Dashboard) -->
          <VBox fx:id="sidePanel" minWidth="280.0" spacing="0" style="-fx-background-color: #292a2d; -fx-border-color: #404142; -fx-border-width: 1 0 0 1;" visible="false">
@@ -187,6 +220,23 @@
                         </children>
                      </VBox>
                      
+                     <!-- Tab Management Section -->
+                     <VBox spacing="8.0">
+                        <children>
+                           <Label style="-fx-font-weight: bold; -fx-text-fill: #9aa0a6;" text="Tab Management">
+                              <font>
+                                 <Font name="Segoe UI" size="14.0" />
+                              </font>
+                           </Label>
+                           <VBox spacing="4.0">
+                              <children>
+                                 <Button fx:id="newTabBtnDash" maxWidth="Infinity" mnemonicParsing="false" onAction="#createNewTab" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-background-radius: 6; -fx-border-color: transparent; -fx-padding: 8;" text="➕ New Tab" />
+                                 <Button fx:id="closeTabBtnDash" maxWidth="Infinity" mnemonicParsing="false" onAction="#closeCurrentTab" style="-fx-background-color: #ea4335; -fx-text-fill: white; -fx-background-radius: 6; -fx-border-color: transparent; -fx-padding: 8;" text="✕ Close Current Tab" />
+                              </children>
+                           </VBox>
+                        </children>
+                     </VBox>
+                     
                      <!-- Quick Actions -->
                      <VBox spacing="8.0">
                         <children>
@@ -225,6 +275,11 @@
                </font>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="tabCountLabel" text="Tabs: 1" textFill="#9aa0a6">
+               <font>
+                  <Font name="Segoe UI" size="11.0" />
+               </font>
+            </Label>
             <Button fx:id="gb" mnemonicParsing="false" onAction="#loadGame" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-background-radius: 4; -fx-padding: 4 8 4 8;" text="🎮 Play Game">
                <font>
                   <Font name="Segoe UI" size="11.0" />

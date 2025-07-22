@@ -11,6 +11,10 @@ import javafx.stage.Stage;
 public class App extends Application {
 
     public static void main(String[] args) {
+     
+        System.setProperty("javafx.allowNativeAccess", "true");
+        System.setProperty("java.awt.headless", "false");
+        
         launch(args);
     }
 

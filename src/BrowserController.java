@@ -9,6 +9,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
@@ -29,11 +31,22 @@ public class BrowserController implements Initializable {
     @FXML private Button Back, forward_Button, reload_Button, dashboardBtn, homeBtn;
     @FXML private Button history, clearHistoryBtn, bookmarkBtn, viewFullHistoryBtn;
     @FXML private Button manageBookmarksBtn, addBookmarkBtn, userStatsBtn, gb;
-    @FXML private Label userLabel, statusLabel;
+    @FXML private Button newTabBtn, closeTabBtn; // New buttons for tab management
+    @FXML private Label userLabel, statusLabel, tabCountLabel;
     @FXML private SplitPane mainSplitPane;
     @FXML private VBox sidePanel;
     @FXML private ListView<String> historyList, bookmarksList;
-    private WebEngine engine;
+    @FXML private TabPane tabPane; // New TabPane for multiple tabs
+    @FXML private HBox tabButtonsContainer; // Container for tab management buttons
+    @FXML private Tab initialTab; // Initial tab reference
+    
+    // Tab management fields
+    private List<WebEngine> tabs = new ArrayList<>();
+    private List<WebView> webViews = new ArrayList<>();
+    private Map<Tab, WebEngine> tabEngineMap = new HashMap<>();
+    private Map<Tab, WebView> tabWebViewMap = new HashMap<>();
+    private int tabCounter = 1;
+    
     private SearchEngine selectedEngine;
     private Stage stage;
     private String username;
@@ -49,7 +62,145 @@ public class BrowserController implements Initializable {
             cho.getItems().addAll(SearchEngine.getNames());
             cho.setOnAction(this::User_Selected);
         }
+        initializeTabPane();
         initializeWebView();
+    }
+
+    private void initializeTabPane() {
+        if (tabPane == null) return;
+        
+        // Create the first tab
+        createNewTab("Home", true);
+        
+        // Add listener for tab selection changes
+        tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
+            if (newTab != null) {
+                switchToTab(newTab);
+            }
+        });
+        
+        // Initialize tab count
+        updateTabCount();
+    }
+
+    @FXML
+    private void initializeWebView() {
+        if (webView == null) return;
+        WebEngine engine = webView.getEngine();
+        tabs.add(engine);
+        setupEventHandlers(engine);
+        loadHomePage(engine);
+        initializeDashboard();
+        if (sidePanel != null) {
+            dashboardVisible = false;
+            sidePanel.setVisible(false);
+            sidePanel.setManaged(false);
+            if (mainSplitPane != null) mainSplitPane.setDividerPositions(1.0);
+        }
+    }
+
+    // Create a new tab
+    @FXML
+    public void createNewTab() {
+        createNewTab("New Tab", false);
+    }
+
+    private void createNewTab(String title, boolean isHome) {
+        if (tabPane == null) return;
+        
+        // Create new WebView and WebEngine
+        WebView newWebView = new WebView();
+        WebEngine newEngine = newWebView.getEngine();
+        
+        // Create new tab
+        Tab newTab = new Tab(title);
+        newTab.setContent(newWebView);
+        
+        // Make tab closable (except the first one)
+        newTab.setClosable(tabPane.getTabs().size() > 0 || !isHome);
+        
+        // Store references
+        tabEngineMap.put(newTab, newEngine);
+        tabWebViewMap.put(newTab, newWebView);
+        tabs.add(newEngine);
+        webViews.add(newWebView);
+        
+        // Setup event handlers for the new engine
+        setupEventHandlers(newEngine);
+        
+        // Add tab change listener
+        newTab.setOnClosed(e -> {
+            // Clean up when tab is closed
+            tabs.remove(newEngine);
+            webViews.remove(newWebView);
+            tabEngineMap.remove(newTab);
+            tabWebViewMap.remove(newTab);
+            updateTabCount(); // Update tab count on close
+        });
+        
+        // Add to TabPane and select it
+        tabPane.getTabs().add(newTab);
+        tabPane.getSelectionModel().select(newTab);
+        
+        // Load home page for new tab
+        if (selectedEngine != null) {
+            newEngine.load(selectedEngine.getHomeUrl());
+        }
+        
+        tabCounter++;
+        updateTabCount();
+        updateStatus("Created new tab");
+        updateTabCount(); // Update tab count on creation
+    }
+
+    // Close current tab
+    @FXML
+    public void closeCurrentTab() {
+        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null && selectedTab.isClosable()) {
+            tabPane.getTabs().remove(selectedTab);
+            updateTabCount();
+            updateStatus("Closed tab");
+            
+            // If no tabs left, create a new one
+            if (tabPane.getTabs().isEmpty()) {
+                createNewTab("Home", true);
+            }
+            updateTabCount(); // Update tab count on close
+        }
+    }
+
+    // Switch to a specific tab
+    private void switchToTab(Tab tab) {
+        WebEngine engine = tabEngineMap.get(tab);
+        WebView view = tabWebViewMap.get(tab);
+        
+        if (engine != null && view != null) {
+            // Update current references
+            webView = view;
+            
+            // Update URL field with current tab's URL
+            updateUrlField(engine);
+            updateStatus("Switched to tab: " + tab.getText());
+        }
+    }
+
+    // Get current active engine
+    private WebEngine getCurrentEngine() {
+        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            return tabEngineMap.get(selectedTab);
+        }
+        return webView != null ? webView.getEngine() : null;
+    }
+
+    // Get current active WebView
+    private WebView getCurrentWebView() {
+        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab != null) {
+            return tabWebViewMap.get(selectedTab);
+        }
+        return webView;
     }
 
     public void initializeAsHomePage(String username) {
@@ -102,7 +253,6 @@ public class BrowserController implements Initializable {
         String engineName = cho.getValue();
         if (engineName != null) {
             selectedEngine = SearchEngine.fromName(engineName);
-            // Selection is now visible directly in the ChoiceBox
             if (userManager != null && username != null) {
                 userManager.setDefaultSearchEngine(username, engineName);
             }
@@ -111,10 +261,6 @@ public class BrowserController implements Initializable {
 
     @FXML
     public void go_WEB(ActionEvent event) throws IOException {
-        if (selectedEngine == null) {
-            // Show alert or highlight the ChoiceBox instead of using label
-            return;
-        }
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Utils.loadScene("/FXML Files/Web_Page.fxml", stage, controller -> {
             BrowserController webController = (BrowserController) controller;
@@ -125,6 +271,7 @@ public class BrowserController implements Initializable {
     
     @FXML
     public void go_Back(ActionEvent event) throws IOException {
+        WebEngine engine = getCurrentEngine();
         if (engine != null) {
             WebHistory history = engine.getHistory();
             ObservableList<WebHistory.Entry> entries = history.getEntries();
@@ -137,25 +284,10 @@ public class BrowserController implements Initializable {
         Utils.loadScene("/FXML Files/Scene2.fxml", stage, null);
     }
     
-    @FXML
-    private void initializeWebView() {
-        if (webView == null) return;
-        engine = webView.getEngine();
-        
-        setupEventHandlers();
-        loadHomePage();
-        initializeDashboard();
-        if (sidePanel != null) {
-            dashboardVisible = false;
-            sidePanel.setVisible(false);
-            sidePanel.setManaged(false);
-            if (mainSplitPane != null) mainSplitPane.setDividerPositions(1.0);
-        }
-    }
-    
     private void updateUserInterface() {
         if (userLabel != null && username != null) userLabel.setText("User: " + username);
         if (statusLabel != null) statusLabel.setText("Ready");
+        updateTabCount(); // Update tab count on UI
     }
     
     private void initializeDashboard() {
@@ -176,8 +308,6 @@ public class BrowserController implements Initializable {
             } else {
                 if (userBookmarks.isEmpty()) {
                     userBookmarks.add("Google - https://www.google.com");
-                    userBookmarks.add("GitHub - https://github.com");
-                    userBookmarks.add("Stack Overflow - https://stackoverflow.com");
                     bookmarksObservableList.setAll(userBookmarks);
                 }
             }
@@ -185,12 +315,13 @@ public class BrowserController implements Initializable {
         updateDashboardHistory();
     }
 
-    private void setupEventHandlers() {
+    private void setupEventHandlers(WebEngine engine) {
         if (textField != null) {
-            textField.setOnKeyPressed(e -> {
+             textField.setOnKeyPressed(e -> {
                 if (e.getCode() == KeyCode.ENTER) loadPage();
             });
         }
+        
         if (engine != null) {
             engine.getLoadWorker().progressProperty().addListener((obs, oldProgress, newProgress) -> {
                 String progressStr = String.format("%.1f%%", newProgress.doubleValue() * 100);
@@ -198,24 +329,46 @@ public class BrowserController implements Initializable {
                     if (statusLabel != null) statusLabel.setText("Loading: " + progressStr);
                 });
             });
+            
             engine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     Platform.runLater(() -> {
                         if (statusLabel != null) statusLabel.setText("SUCCEEDED");
+                        updateTabTitle(engine);
                     });
-                    updateUrlField();
+                    updateUrlField(engine);
                 } else if (newState == Worker.State.FAILED) {
                     Platform.runLater(() -> {
                         if (statusLabel != null) statusLabel.setText("FAILED");
                     });
-                    loadOfflineHtml();
+                    loadOfflineHtml(engine);
                 }
             });
         }
     }
 
-    private void updateUrlField() {
+    private void updateTabTitle(WebEngine engine) {
+        // Find the tab associated with this engine and update its title
+        for (Map.Entry<Tab, WebEngine> entry : tabEngineMap.entrySet()) {
+            if (entry.getValue() == engine) {
+                Tab tab = entry.getKey();
+                String title = engine.getTitle();
+                if (title != null && !title.isEmpty()) {
+                    // Limit title length for display
+                    String displayTitle = title.length() > 20 ? title.substring(0, 17) + "..." : title;
+                    Platform.runLater(() -> tab.setText(displayTitle));
+                }
+                break;
+            }
+        }
+    }
+
+    private void updateUrlField(WebEngine engine) {
         if (engine == null || textField == null) return;
+        
+        // Only update if this is the current active engine
+        if (engine != getCurrentEngine()) return;
+        
         WebHistory history = engine.getHistory();
         ObservableList<WebHistory.Entry> entries = history.getEntries();
         if (!entries.isEmpty()) {
@@ -228,7 +381,7 @@ public class BrowserController implements Initializable {
         }
     }
 
-    private void loadHomePage() {
+    private void loadHomePage(WebEngine engine) {
         if (engine != null && selectedEngine != null) {
             engine.load(selectedEngine.getHomeUrl());
         }
@@ -238,7 +391,10 @@ public class BrowserController implements Initializable {
     public void loadoage_Button() { loadPage(); }
 
     private void loadPage() {
-        if (textField == null || engine == null) return;
+        if (textField == null) return;
+        WebEngine engine = getCurrentEngine();
+        if (engine == null) return;
+        
         String text = textField.getText().trim();
         if (text.isEmpty()) return;
         String url = Utils.buildUrl(text, selectedEngine.getSearchUrl());
@@ -247,6 +403,7 @@ public class BrowserController implements Initializable {
 
     @FXML
     public void Reload() {
+        WebEngine engine = getCurrentEngine();
         if (engine != null) {
             engine.reload();
         }
@@ -254,23 +411,25 @@ public class BrowserController implements Initializable {
 
     @FXML
     public void go_Back() {
+        WebEngine engine = getCurrentEngine();
         if (engine == null) return;
         WebHistory history = engine.getHistory();
         ObservableList<WebHistory.Entry> entries = history.getEntries();
         if (!entries.isEmpty() && history.getCurrentIndex() > 0) {
             history.go(-1);
-            updateUrlField();
+            updateUrlField(engine);
         }
     }
 
     @FXML
     public void go_Forward() {
+        WebEngine engine = getCurrentEngine();
         if (engine == null) return;
         WebHistory history = engine.getHistory();
         ObservableList<WebHistory.Entry> entries = history.getEntries();
         if (!entries.isEmpty() && history.getCurrentIndex() < entries.size() - 1) {
             history.go(1);
-            updateUrlField();
+            updateUrlField(engine);
         }
     }
 
@@ -282,27 +441,27 @@ public class BrowserController implements Initializable {
                 "=== Browsing History for " + username + " ===\n" + String.join("\n", userHistory);
             Utils.showInfo("Browsing History", historyText);
             updateStatus("Displayed history for " + username);
-        } else if (engine != null) {
-            WebHistory history = engine.getHistory();
-            StringBuilder historyText = new StringBuilder("=== Current Session History ===\n");
-            history.getEntries().forEach(entry -> 
-                historyText.append(entry.getLastVisitedDate()).append(" - ").append(entry.getUrl()).append("\n"));
-            Utils.showInfo("Session History", historyText.toString());
-            updateStatus("Displayed session history");
+        } else {
+            WebEngine engine = getCurrentEngine();
+            if (engine != null) {
+                WebHistory history = engine.getHistory();
+                StringBuilder historyText = new StringBuilder("=== Current Session History ===\n");
+                history.getEntries().forEach(entry -> 
+                    historyText.append(entry.getLastVisitedDate()).append(" - ").append(entry.getUrl()).append("\n"));
+                Utils.showInfo("Session History", historyText.toString());
+                updateStatus("Displayed session history");
+            }
         }
     }
 
-    private void loadOfflineHtml() {
+    private void loadOfflineHtml(WebEngine engine) {
         if (engine != null) {
-            String offlineHtml = """
-                <!DOCTYPE html>
-                <html><head><title>Offline</title></head>
-                <body style="font-family: Arial; text-align: center; margin-top: 100px;">
-                    <h1 style="color: #872cd1;">You're offline</h1>
-                    <h2>You can try reloading the page</h2>
-                    <h3>Or try the game</h3>
-                </body></html>""";
-            engine.loadContent(offlineHtml);
+            try {
+                String offlineFilePath = getClass().getResource("/FXML Files/Offline.html").toExternalForm();
+                engine.load(offlineFilePath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -357,6 +516,7 @@ public class BrowserController implements Initializable {
     
     @FXML
     public void addBookmark() {
+        WebEngine engine = getCurrentEngine();
         if (engine != null && userManager != null && username != null) {
             String currentUrl = engine.getLocation();
             String title = engine.getTitle();
@@ -407,8 +567,8 @@ public class BrowserController implements Initializable {
         if (userManager != null && username != null) {
             List<String> history = userManager.getUserHistory(username);
             Utils.showInfo("User Statistics", String.format(
-                "User: %s\nTotal pages visited: %d\nBookmarks saved: %d",
-                username, history.size(), userBookmarks.size()));
+                "User: %s\nTotal pages visited: %d\nBookmarks saved: %d\nOpen tabs: %d",
+                username, history.size(), userBookmarks.size(), tabPane != null ? tabPane.getTabs().size() : 1));
         }
     }
 
@@ -417,7 +577,8 @@ public class BrowserController implements Initializable {
         if (userManager != null && username != null) {
             List<String> history = userManager.getUserHistory(username);
             Utils.showInfo("User Information", String.format(
-                "User: %s\nTotal pages visited: %d", username, history.size()));
+                "User: %s\nTotal pages visited: %d\nOpen tabs: %d", 
+                username, history.size(), tabPane != null ? tabPane.getTabs().size() : 1));
         }
     }
     
@@ -447,6 +608,13 @@ public class BrowserController implements Initializable {
     
     private void updateStatus(String message) {
         if (statusLabel != null) statusLabel.setText(message);
+    }
+
+    private void updateTabCount() {
+        if (tabCountLabel != null && tabPane != null) {
+            int tabCount = tabPane.getTabs().size();
+            tabCountLabel.setText("Tabs: " + tabCount);
+        }
     }
 
     private static String getTimeOfDay() {
