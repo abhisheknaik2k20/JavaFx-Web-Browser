@@ -32,6 +32,7 @@ public class BrowserController implements Initializable {
     @FXML private Button history, clearHistoryBtn, bookmarkBtn, viewFullHistoryBtn;
     @FXML private Button manageBookmarksBtn, addBookmarkBtn, userStatsBtn, gb;
     @FXML private Button newTabBtn, closeTabBtn; // New buttons for tab management
+    @FXML private Button newTabBtnDash, closeTabBtnDash; // Dashboard tab management buttons
     @FXML private Label userLabel, statusLabel, tabCountLabel;
     @FXML private SplitPane mainSplitPane;
     @FXML private VBox sidePanel;
@@ -62,15 +63,42 @@ public class BrowserController implements Initializable {
             cho.getItems().addAll(SearchEngine.getNames());
             cho.setOnAction(this::User_Selected);
         }
-        initializeTabPane();
+        
+        // Initialize WebView first, then TabPane to ensure proper integration
         initializeWebView();
+        initializeTabPane();
     }
 
     private void initializeTabPane() {
         if (tabPane == null) return;
         
-        // Create the first tab
-        createNewTab("Home", true);
+        // Check if there's already an initial tab from FXML
+        if (initialTab != null && webView != null) {
+            // Register the existing initial tab
+            WebEngine engine = webView.getEngine();
+            tabEngineMap.put(initialTab, engine);
+            tabWebViewMap.put(initialTab, webView);
+            tabs.add(engine);
+            webViews.add(webView);
+            
+            // Setup event handlers for the initial engine
+            setupEventHandlers(engine);
+            
+            // Make the initial tab closable if it's not the only tab
+            initialTab.setClosable(false); // Keep first tab non-closable
+            
+            // Set up close listener for initial tab
+            initialTab.setOnClosed(e -> {
+                tabs.remove(engine);
+                webViews.remove(webView);
+                tabEngineMap.remove(initialTab);
+                tabWebViewMap.remove(initialTab);
+                updateTabCount();
+            });
+        } else {
+            // Create the first tab if no initial tab exists
+            createNewTab("Home", true);
+        }
         
         // Add listener for tab selection changes
         tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
@@ -87,10 +115,17 @@ public class BrowserController implements Initializable {
     private void initializeWebView() {
         if (webView == null) return;
         WebEngine engine = webView.getEngine();
-        tabs.add(engine);
-        setupEventHandlers(engine);
+        
+        // Only add to tabs list if not already added by initializeTabPane
+        if (!tabs.contains(engine)) {
+            tabs.add(engine);
+            setupEventHandlers(engine);
+        }
+        
+        // Load home page
         loadHomePage(engine);
         initializeDashboard();
+        
         if (sidePanel != null) {
             dashboardVisible = false;
             sidePanel.setVisible(false);
@@ -102,11 +137,21 @@ public class BrowserController implements Initializable {
     // Create a new tab
     @FXML
     public void createNewTab() {
-        createNewTab("New Tab", false);
+        if (tabPane != null) {
+            createNewTab("New Tab", false);
+        } else {
+            updateStatus("Tab management not available in this view");
+        }
     }
 
     private void createNewTab(String title, boolean isHome) {
         if (tabPane == null) return;
+        
+        // If this is for home and we already have an initial tab, don't create another
+        if (isHome && initialTab != null && tabPane.getTabs().contains(initialTab)) {
+            tabPane.getSelectionModel().select(initialTab);
+            return;
+        }
         
         // Create new WebView and WebEngine
         WebView newWebView = new WebView();
@@ -116,8 +161,8 @@ public class BrowserController implements Initializable {
         Tab newTab = new Tab(title);
         newTab.setContent(newWebView);
         
-        // Make tab closable (except the first one)
-        newTab.setClosable(tabPane.getTabs().size() > 0 || !isHome);
+        // Make tab closable (except for home tabs)
+        newTab.setClosable(!isHome || tabPane.getTabs().size() > 0);
         
         // Store references
         tabEngineMap.put(newTab, newEngine);
@@ -150,12 +195,16 @@ public class BrowserController implements Initializable {
         tabCounter++;
         updateTabCount();
         updateStatus("Created new tab");
-        updateTabCount(); // Update tab count on creation
     }
 
     // Close current tab
     @FXML
     public void closeCurrentTab() {
+        if (tabPane == null) {
+            updateStatus("Tab management not available in this view");
+            return;
+        }
+        
         Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
         if (selectedTab != null && selectedTab.isClosable()) {
             tabPane.getTabs().remove(selectedTab);
@@ -166,7 +215,8 @@ public class BrowserController implements Initializable {
             if (tabPane.getTabs().isEmpty()) {
                 createNewTab("Home", true);
             }
-            updateTabCount(); // Update tab count on close
+        } else if (selectedTab != null && !selectedTab.isClosable()) {
+            updateStatus("Cannot close this tab");
         }
     }
 
@@ -182,24 +232,45 @@ public class BrowserController implements Initializable {
             // Update URL field with current tab's URL
             updateUrlField(engine);
             updateStatus("Switched to tab: " + tab.getText());
+        } else if (tab == initialTab && initialTab != null) {
+            // Handle switching to initial tab
+            WebEngine initialEngine = initialTab.getContent() instanceof WebView ? 
+                ((WebView) initialTab.getContent()).getEngine() : null;
+            if (initialEngine != null) {
+                webView = (WebView) initialTab.getContent();
+                updateUrlField(initialEngine);
+                updateStatus("Switched to tab: " + tab.getText());
+            }
         }
     }
 
     // Get current active engine
     private WebEngine getCurrentEngine() {
-        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            return tabEngineMap.get(selectedTab);
+        if (tabPane != null) {
+            Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+            if (selectedTab != null) {
+                WebEngine engine = tabEngineMap.get(selectedTab);
+                if (engine != null) {
+                    return engine;
+                }
+            }
         }
+        // Fallback to the default webView engine if tabPane is not available
         return webView != null ? webView.getEngine() : null;
     }
 
     // Get current active WebView
     private WebView getCurrentWebView() {
-        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            return tabWebViewMap.get(selectedTab);
+        if (tabPane != null) {
+            Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+            if (selectedTab != null) {
+                WebView view = tabWebViewMap.get(selectedTab);
+                if (view != null) {
+                    return view;
+                }
+            }
         }
+        // Fallback to the default webView if tabPane is not available
         return webView;
     }
 
@@ -215,6 +286,7 @@ public class BrowserController implements Initializable {
         this.username = username;
         initializeWebView();
         updateUserInterface();
+        ensureProperInitialization();
     }
     
     public void setUserManager(UserManager userManager) {
@@ -367,17 +439,23 @@ public class BrowserController implements Initializable {
         if (engine == null || textField == null) return;
         
         // Only update if this is the current active engine
-        if (engine != getCurrentEngine()) return;
+        WebEngine currentEngine = getCurrentEngine();
+        if (engine != currentEngine) return;
         
-        WebHistory history = engine.getHistory();
-        ObservableList<WebHistory.Entry> entries = history.getEntries();
-        if (!entries.isEmpty()) {
-            String currentUrl = entries.get(history.getCurrentIndex()).getUrl();
-            textField.setText(currentUrl);
-            if (userManager != null && username != null && !currentUrl.startsWith("data:")) {
-                userManager.addToHistory(username, currentUrl);
-                if (dashboardVisible) updateDashboardHistory();
+        try {
+            WebHistory history = engine.getHistory();
+            ObservableList<WebHistory.Entry> entries = history.getEntries();
+            if (!entries.isEmpty()) {
+                String currentUrl = entries.get(history.getCurrentIndex()).getUrl();
+                Platform.runLater(() -> textField.setText(currentUrl));
+                
+                if (userManager != null && username != null && !currentUrl.startsWith("data:")) {
+                    userManager.addToHistory(username, currentUrl);
+                    if (dashboardVisible) updateDashboardHistory();
+                }
             }
+        } catch (Exception e) {
+            System.err.println("Error updating URL field: " + e.getMessage());
         }
     }
 
@@ -566,9 +644,10 @@ public class BrowserController implements Initializable {
     public void showUserStats() {
         if (userManager != null && username != null) {
             List<String> history = userManager.getUserHistory(username);
+            int tabCount = (tabPane != null) ? tabPane.getTabs().size() : 1;
             Utils.showInfo("User Statistics", String.format(
                 "User: %s\nTotal pages visited: %d\nBookmarks saved: %d\nOpen tabs: %d",
-                username, history.size(), userBookmarks.size(), tabPane != null ? tabPane.getTabs().size() : 1));
+                username, history.size(), userBookmarks.size(), tabCount));
         }
     }
 
@@ -576,9 +655,10 @@ public class BrowserController implements Initializable {
     public void showUserInfo(ActionEvent event) {
         if (userManager != null && username != null) {
             List<String> history = userManager.getUserHistory(username);
+            int tabCount = (tabPane != null) ? tabPane.getTabs().size() : 1;
             Utils.showInfo("User Information", String.format(
                 "User: %s\nTotal pages visited: %d\nOpen tabs: %d", 
-                username, history.size(), tabPane != null ? tabPane.getTabs().size() : 1));
+                username, history.size(), tabCount));
         }
     }
     
@@ -614,11 +694,35 @@ public class BrowserController implements Initializable {
         if (tabCountLabel != null && tabPane != null) {
             int tabCount = tabPane.getTabs().size();
             tabCountLabel.setText("Tabs: " + tabCount);
+        } else if (tabCountLabel != null) {
+            // Fallback when tabPane is not available
+            tabCountLabel.setText("Tabs: 1");
         }
     }
 
     private static String getTimeOfDay() {
         int hour = LocalTime.now().getHour();
         return hour < 12 ? "Morning" : hour < 17 ? "Afternoon" : "Evening";
+    }
+
+    // Method to ensure proper tab initialization after all components are loaded
+    public void ensureProperInitialization() {
+        Platform.runLater(() -> {
+            try {
+                if (tabPane != null && tabPane.getTabs().isEmpty()) {
+                    createNewTab("Home", true);
+                }
+                updateTabCount();
+                
+                // Ensure the initial tab is properly selected
+                if (tabPane != null && initialTab != null && tabPane.getTabs().contains(initialTab)) {
+                    tabPane.getSelectionModel().select(initialTab);
+                    switchToTab(initialTab);
+                }
+            } catch (Exception e) {
+                System.err.println("Error during initialization: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
     }
 }

@@ -43,17 +43,14 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        
-                        <!-- Tab Management Buttons -->
-                        <Separator orientation="VERTICAL" />
                         <HBox fx:id="tabButtonsContainer" alignment="CENTER_LEFT" spacing="4.0">
                            <children>
-                              <Button fx:id="newTabBtn" mnemonicParsing="false" onAction="#createNewTab" style="-fx-background-color: #1a73e8; -fx-text-fill: white; -fx-background-radius: 4; -fx-min-width: 28; -fx-min-height: 28; -fx-max-width: 28; -fx-max-height: 28; -fx-font-size: 14px;" text="+">
+                              <Button fx:id="newTabBtn" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#createNewTab" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-background-radius: 4; -fx-min-width: 28; -fx-min-height: 28; -fx-max-width: 28; -fx-max-height: 28; -fx-font-size: 14px;" text="+" textOverrun="CLIP" wrapText="true">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Button>
-                              <Button fx:id="closeTabBtn" mnemonicParsing="false" onAction="#closeCurrentTab" style="-fx-background-color: #ea4335; -fx-text-fill: white; -fx-background-radius: 4; -fx-min-width: 28; -fx-min-height: 28; -fx-max-width: 28; -fx-max-height: 28; -fx-font-size: 12px;" text="✕">
+                              <Button fx:id="closeTabBtn" mnemonicParsing="false" onAction="#closeCurrentTab" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-background-radius: 4; -fx-min-width: 28; -fx-min-height: 28; -fx-max-width: 28; -fx-max-height: 28; -fx-font-size: 12px;" text="✕">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
